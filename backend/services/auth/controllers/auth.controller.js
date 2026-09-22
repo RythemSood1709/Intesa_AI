@@ -1,20 +1,24 @@
 import { getAuth } from "firebase-admin/auth";
-import { app } from "../config/firebase";
+import { app } from "../config/firebase.js";
 import User from "../models/user.model.js";
 
 export const login = async (req, res) => {
   try {
     const { token } = req.body;
-    const decoded = getAuth(app).verifyIdToken(token);
+    if (!token) {
+      return res.status(400).json({ message: "Firebase token is required" });
+    }
 
-    const user = await User.findOne({ firebaseUid: decoded.uid });
+    const decoded = await getAuth(app).verifyIdToken(token);
+
+    let user = await User.findOne({ firebaseUid: decoded.uid });
 
     if (!user) {
       user = await User.create({
         firebaseUid: decoded.uid,
-        name: decoded.displayName,
+        name: decoded.name,
         email: decoded.email,
-        avatar: decoded.photoURL,
+        avatar: decoded.picture,
       });
     }
 
@@ -29,6 +33,7 @@ export const login = async (req, res) => {
 
     return res.status(200).json(user);
   } catch (error) {
-    return res.status(500).json({ message: "Login Error: ", error });
+    console.error("Login error:", error);
+    return res.status(500).json({ message: "Login failed" });
   }
 };
