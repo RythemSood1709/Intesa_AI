@@ -8,7 +8,7 @@ import { FcGoogle } from "react-icons/fc";
 const Home = () => {
   const handleLogin = async (token) => {
     try {
-      const { data } = await api.post("/auth/login", { token });
+      const { data } = await api.post("/api/auth/login", { token });
 
       console.log(data);
     } catch (error) {
@@ -30,13 +30,13 @@ const Home = () => {
             <h2 className="text-[17px] font-semibold text-slate-100 tracking-tight">
               Welcome to Intesa AI
             </h2>
-            <p className="text-[13px] text-slate-400">
+            <p className="text-[13px] mt-2 text-slate-400">
               Please login with google to continue
             </p>
           </div>
 
           <button
-            className="w-full flex items-center justify-center gap-3 py-2.75 rounded-xl text-sm font-medium text-black/90 bg-linear-to-br from-emerald-300 to-gray-900 hover:from-emerald-400 hover:to-gray-900 active:from-emerald-500 active:to-gray-900 border border-gray-800/40 shadow-lg shadow-white/10 hover:shadow-gray-400/10 transition-all duration-150 cursor-pointer"
+            className="w-full flex items-center justify-center gap-3 py-2.75 rounded-xl text-sm font-medium text-black/90 bg-linear-to-br from-emerald-400 to-gray-900 hover:from-emerald-500 hover:to-gray-900 active:from-emerald-500 active:to-gray-900 border border-gray-800/40 shadow-lg shadow-white/10 hover:shadow-gray-400/10 transition-all duration-150 cursor-pointer"
             onClick={googleLogin}
           >
             <FcGoogle size={25} className="text-white" />
