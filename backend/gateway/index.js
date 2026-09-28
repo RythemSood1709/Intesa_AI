@@ -5,6 +5,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import { getCurrentUser } from "./controllers/user.controller.js";
 import protect from "./middleware/auth.middleware.js";
+import { proxyWithHeader } from "./utils/proxyWithHeader.js";
 
 dotenv.config();
 
@@ -23,6 +24,9 @@ app.use(cookieParser());
 
 //middleware to redirect requests to the auth service
 app.use("/api/auth", proxy(process.env.AUTH_SERVICE_URL));
+
+//middleware to redirect requests to the chat service with user id from session as header
+app.use("/api/chat", proxyWithHeader(process.env.CHAT_SERVICE_URL));
 
 app.get("/api/me", protect, getCurrentUser);
 
