@@ -68,7 +68,7 @@ export const saveMessage = async (req, res) => {
 
 export const getMessages = async (req, res) => {
   try {
-    const { conversationId } = req.body;
+    const { conversationId } = req.params;
 
     const messages = await Message.find({ conversationId }).sort({
       createdAt: -1,

@@ -26,7 +26,7 @@ app.use(cookieParser());
 app.use("/api/auth", proxy(process.env.AUTH_SERVICE_URL));
 
 //middleware to redirect requests to the chat service with user id from session as header
-app.use("/api/chat", proxyWithHeader(process.env.CHAT_SERVICE_URL));
+app.use("/api/chat", protect, proxyWithHeader(process.env.CHAT_SERVICE_URL));
 
 app.get("/api/me", protect, getCurrentUser);
 
