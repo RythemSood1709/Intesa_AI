@@ -60,3 +60,5 @@ workflow.addEdge("coding", "__end__");
 workflow.addEdge("ppt", "__end__");
 workflow.addEdge("pdf", "__end__");
 workflow.addEdge("vision", "__end__");
+
+export const graph= workflow.compile();
