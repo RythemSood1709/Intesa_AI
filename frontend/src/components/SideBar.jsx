@@ -1,14 +1,22 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { PanelLeftIcon, PenSquare, Plus } from "lucide-react";
+import { MessageSquare, PanelLeftIcon, PenSquare, Plus } from "lucide-react";
 import { getConversations } from "../features/getConversations";
-import { useDispatch } from "react-redux";
-import { addConversation, setConversations } from "../redux/conversationSlice";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  addConversation,
+  setConversations,
+  setSelectedConversation,
+} from "../redux/conversationSlice";
 import { createConversation } from "../features/createConversation";
 
 const SideBar = () => {
   const [collapsed, setCollapsed] = useState(false);
   const dispatch = useDispatch();
+
+  const { conversations, selectedConversation } = useSelector(
+    (state) => state.conversation,
+  );
 
   useEffect(() => {
     const getConv = async () => {
@@ -34,7 +42,7 @@ const SideBar = () => {
           </div>
           <span className="text-[16px] font-semibold text-slate-100 tracking-tight flex-1">
             IntesaAI
-            <span className="text-[10px] font-medium text-indigo-400 uppercase bg-indigo-500/10 border border-indigo-500/20 px-2 ml-2 py-0.5 rounded-full tracking-wide ">
+            <span className="text-[8px] font-medium text-slate-400 uppercase bg-sky-500/5 border border-indigo-500/20 px-2 ml-2 py-0.5 rounded-full tracking-wide ">
               free
             </span>
           </span>
@@ -57,7 +65,35 @@ const SideBar = () => {
           </button>
         </div>
 
-        <div className=""></div>
+        {conversations.length > 0 ? (
+          <div className="px-5 text-center pt-4 pb-1.5 text-[10.5px] font-semibold uppercase tracking-widest text-slate-600">
+            Recents
+          </div>
+        ) : (
+          <div className="px-5 text-center pt-4 pb-1.5 text-[10.5px] font-semibold uppercase tracking-widest text-slate-600">
+            No Recent Conversations
+          </div>
+        )}
+
+        <div className="flex-1 overflow-y-auto px-2.5 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          {conversations.map((conv, i) => {
+            const isActive = selectedConversation?._id === conv?._id;
+
+            return (
+              <div
+                key={i}
+                onClick={() => dispatch(setSelectedConversation(conv))}
+                className={`flex items-center gap-2.5 cursor-pointer mb-0.5 px-3 py-2 rounded-full border transition-colors duration-150 ${isActive ? "bg-sky-900/5 border-indigo-500/[0.18]" : "bg-transparent border-transparent"} `}
+              >
+                <span
+                  className={`${isActive ? "text-white/90" : "text-white/50"} ml-3`}
+                >
+                  {conv?.title || "New Chat"}
+                </span>
+              </div>
+            );
+          })}
+        </div>
       </div>
     </div>
   );
