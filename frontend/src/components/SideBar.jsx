@@ -53,7 +53,7 @@ const SideBar = () => {
       onClick={collapsed ? () => setCollapsed(false) : undefined}
       className={`fixed lg:static inset-y-0 left-0 z-50 h-screen shrink-0 overflow-hidden border-r border-white/[0.06] transition-[width] duration-200 ease-in-out ${
         collapsed
-          ? "hidden lg:flex w-[56px] flex-col items-center cursor-ew-resize bg-linear-to-br from-[#090a0f] to-[#0d1628] bg-[#090a0f]"
+          ? "hidden lg:flex w-[60px] flex-col items-center cursor-ew-resize bg-linear-to-br from-[#090a0f] to-[#0d1628] bg-[#090a0f]"
           : "w-67.5 bg-linear-to-br from-[#050608] to-[#0b1324]"
       }`}
     >
@@ -77,9 +77,9 @@ const SideBar = () => {
             {userData ? (
               <div className="relative shrink-0 flex flex-col items-center gap-4">
                 <div>
-                  {userData?.avatar || imageError ? (
+                  {userData?.avatar && !imageError ? (
                     <img
-                      className="w-9 h-9 rounded-full object-cover border-2 border-sky-500/15"
+                      className="w-10 h-10 rounded-full object-cover border-2 border-sky-500/15"
                       src={userData?.avatar}
                       alt="image"
                       onError={() => setImageError(true)}
@@ -111,7 +111,7 @@ const SideBar = () => {
       ) : (
         <div className="h-full">
           <div className="flex flex-col h-full">
-            <div className="flex items-center gap-2.5 px-4 py-4 border-b border-white/[0.06]">
+            <div className="flex items-center gap-2.5 px-4 py-4">
               <div className="hidden lg:flex items-center justify-center w-7 h-7 rounded-lg text-slate-500 hover:text-slate-200 hover:bg-white/[0.05] transition-colors duration-150 bg-transparent border-none cursor-pointer">
                 <PanelLeftIcon onClick={() => setCollapsed(true)} />
               </div>
@@ -128,6 +128,9 @@ const SideBar = () => {
                 <PenSquare size={20} />
               </button>
             </div>
+
+            <div className="mx-2.5 h-px bg-gray-300/[0.06]" />
+
 
             <div className="px-4 pt-4 pb-1">
               <button
@@ -176,7 +179,7 @@ const SideBar = () => {
               {userData ? (
                 <div className="flex items-center gap-2.5 cursor-pointer rounded-xl px-3 py-3 hover:bg-white/[0.05] transition-colors duration-150">
                   <div className="relative shrink-0">
-                    {userData?.avatar || imageError ? (
+                    {userData?.avatar && !imageError ? (
                       <img
                         className="w-11 h-11 rounded-full object-cover border-2 border-sky-500/15"
                         src={userData?.avatar}

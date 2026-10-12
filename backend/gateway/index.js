@@ -7,6 +7,8 @@ import { getCurrentUser } from "./controllers/user.controller.js";
 import protect from "./middleware/auth.middleware.js";
 import { proxyWithHeader } from "./utils/proxyWithHeader.js";
 
+import morgan from "morgan";
+
 dotenv.config();
 
 const port = process.env.PORT;
@@ -22,14 +24,14 @@ app.use(
 
 app.use(cookieParser());
 
+app.use(morgan("dev"));
+
 //middleware to redirect requests to the auth service
 app.use("/api/auth", proxy(process.env.AUTH_SERVICE_URL));
 
 //middleware to redirect requests to the chat service with user id from session as header
 app.use("/api/chat", protect, proxyWithHeader(process.env.CHAT_SERVICE_URL));
 app.use("/api/agent", protect, proxy(process.env.AGENT_SERVICE_URL));
-
-
 
 app.get("/api/me", protect, getCurrentUser);
 
