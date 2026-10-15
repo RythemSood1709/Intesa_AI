@@ -165,7 +165,7 @@ const SideBar = () => {
                   <div
                     key={i}
                     onClick={() => dispatch(setSelectedConversation(conv))}
-                    className={`flex items-center gap-2.5 cursor-pointer mb-0.5 px-3 py-2 rounded-full border transition-colors duration-150 ${isActive ? "bg-sky-900/5 border-indigo-500/[0.18]" : "bg-transparent border-transparent"} `}
+                    className={`flex items-center gap-2.5 cursor-pointer mb-0.5 px-3 py-2 rounded-full border transition-colors duration-150 ${isActive ? "bg-sky-900/18 border-indigo-500/[0.3]" : "bg-transparent border-transparent"} `}
                   >
                     <span
                       className={`${isActive ? "text-white/90" : "text-white/50"} ml-3 text-[16px]`}
