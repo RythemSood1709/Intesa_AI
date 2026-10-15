@@ -53,7 +53,7 @@ const SideBar = () => {
       onClick={collapsed ? () => setCollapsed(false) : undefined}
       className={`fixed lg:static inset-y-0 left-0 z-50 h-screen shrink-0 overflow-hidden border-r border-white/[0.06] transition-[width] duration-200 ease-in-out ${
         collapsed
-          ? "hidden lg:flex w-[60px] flex-col items-center cursor-ew-resize bg-linear-to-br from-[#090a0f] to-[#0d1628] bg-[#090a0f]"
+          ? "lg:flex w-[60px] flex-col items-center cursor-ew-resize bg-linear-to-br from-[#090a0f] to-[#0d1628] bg-[#090a0f]"
           : "w-67.5 bg-linear-to-br from-[#050608] to-[#0b1324]"
       }`}
     >
@@ -112,7 +112,7 @@ const SideBar = () => {
         <div className="h-full">
           <div className="flex flex-col h-full">
             <div className="flex items-center gap-2.5 px-4 py-4">
-              <div className="hidden lg:flex items-center justify-center w-7 h-7 rounded-lg text-slate-500 hover:text-slate-200 hover:bg-white/[0.05] transition-colors duration-150 bg-transparent border-none cursor-pointer">
+              <div className=" lg:flex items-center justify-center w-7 h-7 rounded-lg text-slate-500 hover:text-slate-200 hover:bg-white/[0.05] transition-colors duration-150 bg-transparent border-none cursor-pointer">
                 <PanelLeftIcon onClick={() => setCollapsed(true)} />
               </div>
               <span className="text-[16px] font-semibold text-slate-100 tracking-tight flex-1">
