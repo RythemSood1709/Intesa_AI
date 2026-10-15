@@ -32,7 +32,7 @@ const Home = () => {
   };
 
   return (
-    <div className="h-screen flex bg-[#090a0f] text-white overflow-hidden">
+    <div className="h-screen min-w-0 flex bg-[#090a0f] text-white overflow-hidden">
 
       <SideBar/>
       <ChatArea/>

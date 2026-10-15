@@ -1,4 +1,4 @@
-import {graph} from "../graph/graph.js";
+import { graph } from "../graph/graph.js";
 import axios from "axios";
 
 export const agent = async (req, res) => {
@@ -17,6 +17,12 @@ export const agent = async (req, res) => {
     });
 
     const response = result.aiResponse;
+
+    await axios.post(`${process.env.CHAT_SERVICE_URL}/save-message`, {
+      conversationId,
+      role: "assistant",
+      content: response,
+    });
 
     return res.status(200).json(response);
   } catch (error) {

@@ -7,17 +7,17 @@ const MessageList = () => {
   const { messages } = useSelector((state) => state.message);
 
   return (
-    <div className="flex-1 overflow-y-auto px-6 py-6 space-y-5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ">
+    <div className="min-h-0 flex-1 overflow-y-auto px-3 sm:px-6 py-6 space-y-5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ">
       {messages.length == 0 || !selectedConversation ? (
         <div className="h-full flex flex-col items-center justify-center gap-4 text-center">
           <div className="flex flex-col gap-1.5">
-            <h1 className="text-[100px] font-semibold text-sky-200 opacity-30 blur-[1.5px] tracking-tight">
+            <h1 className="text-[56px] sm:text-[72px] lg:text-[100px] font-semibold text-sky-200 opacity-30 blur-[1.5px] tracking-tight">
               IntesaAI
             </h1>
-            <p className="text-[20px] text-slate-400 blur-[0.5px] leading-relaxed">
+            <p className="text-[16px] sm:text-[20px] text-slate-400 blur-[0.5px] leading-relaxed">
               How can I help you?
             </p>
-            <p className="text-[20px] text-slate-700 leading-relaxed">
+            <p className="text-[16px] sm:text-[20px] text-slate-700 leading-relaxed">
               Ask me anything - code, ideas, explanations, or just a quick
               question.
             </p>

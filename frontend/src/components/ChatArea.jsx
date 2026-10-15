@@ -21,7 +21,7 @@ const ChatArea = () => {
   }, [selectedConversation]);
 
   return (
-    <div className="flex-1 flex flex-col">
+    <div className="min-w-0 min-h-0 flex-1 flex flex-col">
       <Nav />
       <MessageList />
       <ChatInput />

@@ -22,7 +22,11 @@ import logOut from "../features/logOut";
 import { setUserData } from "../redux/userSlice";
 
 const SideBar = () => {
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(
+    () =>
+      typeof window !== "undefined" &&
+      window.matchMedia("(max-width: 1023px)").matches,
+  );
   const [imageError, setImageError] = useState(false);
 
   const dispatch = useDispatch();
@@ -51,10 +55,10 @@ const SideBar = () => {
   return (
     <div
       onClick={collapsed ? () => setCollapsed(false) : undefined}
-      className={`fixed lg:static inset-y-0 left-0 z-50 h-screen shrink-0 overflow-hidden border-r border-white/[0.06] transition-[width] duration-200 ease-in-out ${
+      className={`h-screen shrink-0 overflow-hidden border-r border-white/[0.06] transition-[width] duration-200 ease-in-out ${
         collapsed
-          ? "lg:flex w-[60px] flex-col items-center cursor-ew-resize bg-linear-to-br from-[#090a0f] to-[#0d1628] bg-[#090a0f]"
-          : "w-67.5 bg-linear-to-br from-[#050608] to-[#0b1324]"
+          ? "relative w-[60px] flex flex-col items-center cursor-ew-resize bg-linear-to-br from-[#090a0f] to-[#0d1628] bg-[#090a0f]"
+          : "fixed inset-y-0 left-0 z-50 w-[270px] lg:static lg:w-[270px] bg-linear-to-br from-[#050608] to-[#0b1324]"
       }`}
     >
       {collapsed ? (
