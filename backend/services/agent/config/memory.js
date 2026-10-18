@@ -13,7 +13,7 @@ export const getMemory = async (conversationId) => {
   const messages = await getMessages(conversationId);
 
   if (messages) {
-    await redis.set(key, JSON.stringify(messages), "EX", 24 * 60 * 60);
+    await redis.set(key, JSON.stringify(messages), "EX", 3*24 * 60 * 60);
   }
 
   return messages;
@@ -32,5 +32,5 @@ export const addMessage = async (conversationId, role, content) => {
     messages.shift();
   }
 
-  await redis.set(key, JSON.stringify(messages), "EX", 24 * 60 * 60);
+  await redis.set(key, JSON.stringify(messages), "EX", 3*24 * 60 * 60);
 };
