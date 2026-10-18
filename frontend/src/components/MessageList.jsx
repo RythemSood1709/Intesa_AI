@@ -5,9 +5,11 @@ import MessageBubble from "./MessageBubble";
 const MessageList = () => {
   const { selectedConversation } = useSelector((state) => state.conversation);
   const { messages } = useSelector((state) => state.message);
+  const { userData } = useSelector((state) => state.user);
 
   return (
     <div className="min-h-0 flex-1 overflow-y-auto px-3 sm:px-6 py-6 space-y-5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ">
+            
       {messages.length == 0 || !selectedConversation ? (
         <div className="h-full flex flex-col items-center justify-center gap-4 text-center">
           <div className="flex flex-col gap-1.5">
@@ -15,7 +17,7 @@ const MessageList = () => {
               IntesaAI
             </h1>
             <p className="text-[16px] sm:text-[20px] text-slate-400 blur-[0.5px] leading-relaxed">
-              How can I help you?
+             Hi {userData?.name.split(' ')[0]}, How can I help you?
             </p>
             <p className="text-[16px] sm:text-[20px] text-slate-700 leading-relaxed">
               Ask me anything - code, ideas, explanations, or just a quick

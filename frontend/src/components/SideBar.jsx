@@ -20,6 +20,7 @@ import {
 import { createConversation } from "../features/createConversation";
 import logOut from "../features/logOut";
 import { setUserData } from "../redux/userSlice";
+import { setMessages } from "../redux/messageSlice";
 
 const SideBar = () => {
   const [collapsed, setCollapsed] = useState(
@@ -48,8 +49,8 @@ const SideBar = () => {
   }, [userData?._id]);
 
   const handleCreateConversation = async () => {
-    const data = await createConversation();
-    dispatch(addConversation(data));
+    dispatch(setMessages([]));
+    dispatch(setSelectedConversation(null));
   };
 
   return (
@@ -135,7 +136,6 @@ const SideBar = () => {
 
             <div className="mx-2.5 h-px bg-gray-300/[0.06]" />
 
-
             <div className="px-4 pt-4 pb-1">
               <button
                 onClick={handleCreateConversation}
@@ -170,7 +170,9 @@ const SideBar = () => {
                     <span
                       className={`${isActive ? "text-white/90" : "text-white/50"} ml-3 text-[16px]`}
                     >
-                      {conv?.title || "New Chat"}
+                      {conv.title?.length > 30
+                        ? `${conv?.title.split(" ").slice(0, 5).join(" ")}....`
+                        : conv?.title || "New Chat"}
                     </span>
                   </div>
                 );
