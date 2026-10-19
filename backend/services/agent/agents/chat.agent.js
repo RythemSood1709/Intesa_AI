@@ -11,8 +11,19 @@ export const chatAgent = async (state) => {
 
   const history = await getMemory(state.conversationId);
 
+  const searchContext = state.searchResults
+    ? `Here are some search results that may help you answer the user's question:
+     ${JSON.stringify(state.searchResults)}`
+    : "";
+
   const systemPrompt = `
   You are Intesa AI, an intelligent AI assistant.
+
+  ${searchContext}
+
+  If searchContext is provided:
+    -Use search results to answer the user's question.
+    -Do not mention internal tools.
   
     Rules:
     -For simple questions, greetings and short queries, respond naturally

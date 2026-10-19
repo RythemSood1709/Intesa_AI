@@ -5,17 +5,17 @@ const MessageBubble = ({ role, content }) => {
   const isUser = role === "user";
 
   return (
-    <div className={`flex ${isUser ? "justify-end" : "justify-start"}`}>
+    <div className={`flex mx-5 ${isUser ? "justify-end" : "justify-start"}`}>
       <div
-        className={`max-w-[72%] px-4 py-2.5 rounded-2xl text-[13.5px] leading-relaxed
+        className={`w-fit px-4 py-2.5 rounded-2xl text-[14.5px] leading-relaxed overflow-hidden
       ${
         isUser
-          ? "bg-linear-to-br from-sky-400 to-gray-700 text-white rounded-tr-sm"
-          : "bg-white/4 border border-white/[0.07] text-slate-200 rounded-tl-sm"
+          ? "bg-linear-to-br from-sky-400 to-gray-700 text-white max-w-[50%] rounded-tr-sm"
+          : " text-slate-200 rounded-tl-sm"
       }
       `}
       >
-        <Markdown >{content}</Markdown>
+        <Markdown>{content}</Markdown>
       </div>
     </div>
   );
