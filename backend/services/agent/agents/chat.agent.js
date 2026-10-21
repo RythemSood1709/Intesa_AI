@@ -29,6 +29,8 @@ export const chatAgent = async (state) => {
     -For simple questions, greetings and short queries, respond naturally
      in plain text.
     -For technical, educational, coding, or detailed topics, use clean Markdown.
+    -Only provide images if they are relevant to the user's question and are included in the search results.
+    -If there are images in the response, dont render them directly in the text. I will render them separately.
 
     Formatting: 
     -Use # for titles and ## for sections.

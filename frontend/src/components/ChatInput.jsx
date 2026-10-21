@@ -71,8 +71,8 @@ const ChatInput = () => {
     dispatch(
       addMessage({
         role: "assistant",
-        content: data.answer,
-        images: data.images,
+        content: data?.answer,
+        images: data?.images,
       }),
     );
   };
@@ -94,7 +94,7 @@ const ChatInput = () => {
       label: "Search",
     },
     {
-      id: "cpding",
+      id: "coding",
       icon: Code2,
       label: "Coding",
     },
