@@ -30,7 +30,7 @@ export const codingAgent = async (state) => {
 
       Generate the requested project.
 
-      Default Stack:
+      Default Stack: 
       - HTML
       - CSS
       - JavaScript
@@ -80,5 +80,23 @@ export const codingAgent = async (state) => {
       User Request:
       ${state.prompt}
     `;
+
+    const response = await llm.invoke(prompt);
+
+    const data = JSON.parse(response.content);
+
+    return {
+      ...state,
+      aiResponse: "Code Generated Successfully.",
+      artifacts: [
+        {
+          id: Date.now(),
+          type: "Project",
+          files: data.files || [],
+        },
+      ],
+    };
   }
+
+  
 };
