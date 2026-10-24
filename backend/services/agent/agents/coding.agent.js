@@ -98,5 +98,39 @@ export const codingAgent = async (state) => {
     };
   }
 
-  
+  const res = await llm.invoke(`
+  You are IntesaAI Coding Agent.
+
+  User's Request is:
+  ${intent}
+
+  Return Markdown only.
+
+  Never Generate project files.
+
+  Use headings like:
+
+  #Overview
+
+  ##Explanation
+
+  ##Problems
+
+  ##Improvements
+
+  ##Best Practices
+
+  ##Optimized Code (if needed)
+
+  User Request:
+  ${state.prompt}
+    `);
+
+  const data = res.content;
+
+  return {
+    ...state,
+    aiResponse: data,
+    artifacts: [],
+  };
 };
