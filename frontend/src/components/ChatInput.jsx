@@ -14,7 +14,7 @@ import {
 import React, { useState } from "react";
 import sendMessage from "../features/sendMessage";
 import { useDispatch, useSelector } from "react-redux";
-import { addMessage } from "../redux/messageSlice";
+import { addMessage, setArtifacts } from "../redux/messageSlice";
 
 import { createConversation } from "../features/createConversation.js";
 import {
@@ -68,6 +68,7 @@ const ChatInput = () => {
     setValue("");
 
     const data = await sendMessage(payload);
+    dispatch(setArtifacts(data?.artifacts || []));
     dispatch(
       addMessage({
         role: "assistant",
