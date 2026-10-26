@@ -10,6 +10,8 @@ import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { motion } from "motion/react";
 
+import Editor from "@monaco-editor/react";
+
 const Artifact = () => {
   const { artifacts } = useSelector((state) => state.message);
 
@@ -19,7 +21,7 @@ const Artifact = () => {
 
   if (artifacts.length === 0) return;
 
-  const file = artifacts[0]?.files[activeFile]?.content;
+  const file = artifacts[0]?.files[activeFile];
   const htmlFile = artifacts[0]?.files?.find((f) => f.name === "index.html");
 
   const cssFile = artifacts[0]?.files?.find((f) => f.name === "style.css");
@@ -47,10 +49,29 @@ const Artifact = () => {
       </html>
       `;
 
+  const detectLanguage = (filename = "") => {
+    const name = filename.toLowerCase();
+
+    if (name.endsWith(".html")) return "html";
+    if (name.endsWith(".css")) return "css";
+    if (name.endsWith(".js")) return "javascript";
+    if (name.endsWith(".ts")) return "typescript";
+    if (name.endsWith(".jsx")) return "javascript";
+    if (name.endsWith(".tsx")) return "typescript";
+    if (name.endsWith(".json")) return "json";
+    if (name.endsWith(".md")) return "markdown";
+    if (name.endsWith(".py")) return "python";
+    if (name.endsWith(".java")) return "java";
+    if (name.endsWith(".c")) return "c";
+    if (name.endsWith(".cpp")) return "cpp";
+
+    return "plaintext";
+  };
+
   return (
     <motion.div
-      initial={{ width: 350 }}
-      animate={{ width: collapsed ? 48 : 350 }}
+      initial={{ width: 400 }}
+      animate={{ width: collapsed ? 48 : 400 }}
       transition={{ duration: 0.25, ease: "easeInOut" }}
       className="hidden lg:flex h-full border-1 border-white/[0.06] flex-col overflow-hidden shrink-0 w-[250px]"
     >
@@ -130,10 +151,26 @@ const Artifact = () => {
               </motion.div>
             ) : (
               <motion.div
-                initial={{}}
-                animate={{}}
-                transition={{}}
-              ></motion.div>
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5 }}
+                className="w-full h-full"
+              >
+                <Editor
+                  theme="vs-dark"
+                  value={file?.content}
+                  language={detectLanguage(file?.name)}
+                  options={{
+                    scrollBeyondLastLine: false,
+                    readOnly: true,
+                    fontSize: 13,
+                    padding: { top: 16, bottom: 10 },
+                    minimap: { enabled: false },
+                    automaticLayout: true,
+                    renderLineHighlight: "none",
+                  }}
+                />
+              </motion.div>
             )}
           </div>
         </div>
