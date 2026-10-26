@@ -14,7 +14,10 @@ const gemini = new ChatGoogleGenerativeAI({
 const openRouter = new ChatOpenRouter({
   model: "deepseek/deepseek-chat",
   temperature: 0,
-  maxTokens: 2500,
+  maxTokens: 8000,
+  modelKwargs: {
+    response_format: { type: "json_object" },
+  },
 });
 
 export const getModel = async (agent) => {
@@ -24,7 +27,7 @@ export const getModel = async (agent) => {
     case "search":
       return groq;
     case "coding":
-      return openRouter;
+      return gemini;
     default:
       return groq;
   }

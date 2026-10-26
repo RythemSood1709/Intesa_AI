@@ -1,5 +1,36 @@
 import { getModel } from "../config/llmModels.js";
 
+const parseGeneratedProject = (content) => {
+  const text = Array.isArray(content)
+    ? content
+        .map((part) => (typeof part === "string" ? part : part?.text || ""))
+        .join("")
+    : typeof content === "string"
+      ? content
+      : JSON.stringify(content);
+
+  const withoutMarkdown = text
+    .replace(/^```(?:json)?\s*/i, "")
+    .replace(/\s*```$/i, "")
+    .trim();
+
+  try {
+    const data = JSON.parse(withoutMarkdown);
+
+    if (!data || !Array.isArray(data.files)) {
+      throw new Error('The model response does not contain a "files" array.');
+    }
+
+    return data;
+  } catch (error) {
+    throw new Error(
+      `Coding model returned invalid project JSON: ${error.message}. ` +
+        "The response may have been truncated; increase the model output limit or simplify the request.",
+      { cause: error },
+    );
+  }
+};
+
 export const codingAgent = async (state) => {
   const intentModel = await getModel("intent");
 
@@ -83,7 +114,7 @@ export const codingAgent = async (state) => {
 
     const response = await llm.invoke(prompt);
 
-    const data = JSON.parse(response.content);
+    const data = parseGeneratedProject(response.content);
 
     return {
       ...state,
