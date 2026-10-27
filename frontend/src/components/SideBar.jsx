@@ -20,7 +20,7 @@ import {
 import { createConversation } from "../features/createConversation";
 import logOut from "../features/logOut";
 import { setUserData } from "../redux/userSlice";
-import { setMessages } from "../redux/messageSlice";
+import { setArtifacts, setMessages } from "../redux/messageSlice";
 
 const SideBar = () => {
   const [collapsed, setCollapsed] = useState(
@@ -51,6 +51,7 @@ const SideBar = () => {
   const handleCreateConversation = async () => {
     dispatch(setMessages([]));
     dispatch(setSelectedConversation(null));
+    dispatch(setArtifacts([]));
   };
 
   return (

@@ -1,5 +1,6 @@
 "use client";
 import {
+  Check,
   Code2,
   Copy,
   Eye,
@@ -19,7 +20,17 @@ const Artifact = () => {
   const [collapsed, setCollapsed] = useState(false);
   const [activeFile, setActiveFile] = useState(0);
 
+  const [copiedCode, setCopiedCode] = useState(false);
+
   if (artifacts.length === 0) return;
+
+  const copyCode = async (code) => {
+    await navigator.clipboard.writeText(code);
+    setCopiedCode(true);
+    setTimeout(() => {
+      setCopiedCode(false);
+    }, 2000);
+  };
 
   const file = artifacts[0]?.files[activeFile];
   const htmlFile = artifacts[0]?.files?.find((f) => f.name === "index.html");
@@ -91,8 +102,11 @@ const Artifact = () => {
             </div>
 
             <div className="flex items-center gap-1 shrink-0">
-              <button className="flex items-center gap-1.5 px-2.5 py-1.5 text-[11px] font-medium text-slate-400 hover:text-slate-200 hover:bg-white/[0.06] rounded-lg transition-colors duration-150 bg-transparent border-none cursor-pointer">
-                <Copy size={15} />
+              <button
+                onClick={() => copyCode(file?.content)}
+                className="flex items-center gap-1.5 px-2.5 py-1.5 text-[11px] font-medium text-slate-400 hover:text-slate-200 hover:bg-white/[0.06] rounded-lg transition-colors duration-150 bg-transparent border-none cursor-pointer"
+              >
+                {copiedCode ? <Check size={15} /> : <Copy size={15} />}
               </button>
             </div>
 

@@ -20,6 +20,12 @@ const openRouter = new ChatOpenRouter({
   },
 });
 
+const Nemotron3Ultra = new ChatOpenRouter({
+  model: "nvidia/nemotron-3-ultra-550b-a55b:free",
+  temperature: 0,
+  maxTokens: 15000,
+});
+
 export const getModel = async (agent) => {
   switch (agent) {
     case "chat":
@@ -27,7 +33,7 @@ export const getModel = async (agent) => {
     case "search":
       return groq;
     case "coding":
-      return gemini;
+      return openRouter;
     default:
       return groq;
   }
