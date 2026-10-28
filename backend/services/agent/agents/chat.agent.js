@@ -7,16 +7,17 @@ import { getModel } from "../config/llmModels.js";
 import { getMemory } from "../config/memory.js";
 
 export const chatAgent = async (state) => {
-  const llm = await getModel("chat");
+  try {
+    const llm = await getModel("chat");
 
-  const history = await getMemory(state.conversationId);
+    const history = await getMemory(state.conversationId);
 
-  const searchContext = state.searchResults
-    ? `Here are some search results that may help you answer the user's question:
+    const searchContext = state.searchResults
+      ? `Here are some search results that may help you answer the user's question:
      ${JSON.stringify(state.searchResults)}`
-    : "";
+      : "";
 
-  const systemPrompt = `
+    const systemPrompt = `
   You are Intesa AI, an intelligent AI assistant.
 
   ${searchContext}
@@ -43,22 +44,28 @@ export const chatAgent = async (state) => {
     -Never generate large walls of text.
   `;
 
-  const messages = [new SystemMessage(systemPrompt)];
+    const messages = [new SystemMessage(systemPrompt)];
 
-  history.forEach((message) => {
-    if (message.role === "user") {
-      messages.push(new HumanMessage(message.content));
-    } else {
-      messages.push(new AIMessage(message.content));
-    }
-  });
+    history.forEach((message) => {
+      if (message.role === "user") {
+        messages.push(new HumanMessage(message.content));
+      } else {
+        messages.push(new AIMessage(message.content));
+      }
+    });
 
-  messages.push(new HumanMessage(state.prompt));
+    messages.push(new HumanMessage(state.prompt));
 
-  const response = await llm.invoke(messages);
+    const response = await llm.invoke(messages);
 
-  return {
-    ...state,
-    aiResponse: response.content,
-  };
+    return {
+      ...state,
+      aiResponse: response.content,
+    };
+  } catch (error) {
+    return {
+      ...state,
+      aiResponse: "#❌ Failed to Generate Response",
+    };
+  }
 };
