@@ -83,19 +83,13 @@ const MessageBubble = ({ role, content, images }) => {
               </a>
             ),
             img: ({ src, alt }) => (
-              <a
-                href={src}
-                target="_blank"
-                rel="noreferrer"
-                className="my-3 block w-fit"
-              >
-                <img
-                  src={src}
-                  alt={alt || "Generated image"}
-                  loading="lazy"
-                  className="max-w-full w-[min(640px,80vw)] rounded-xl border border-white/10 object-contain"
-                />
-              </a>
+              <img
+                src={src}
+                onClick={() => setLightBox(src)}
+                alt={alt || "Generated image"}
+                loading="lazy"
+                className="max-w-full w-[min(640px,80vw)] rounded-xl border border-white/10 object-contain"
+              />
             ),
             code: ({ className, children }) => {
               const value = String(children).trim();

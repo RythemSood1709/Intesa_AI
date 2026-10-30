@@ -47,8 +47,6 @@ export const imageAgent = async (state) => {
 
     const downloadUrl = await getFromS3(filename, 24 * 60 * 60);
 
-    console.log(downloadUrl);
-
     return {
       ...state,
       aiResponse: `# 🏞️ Image Generated Successfully
