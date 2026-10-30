@@ -60,7 +60,7 @@ export const imageAgent = async (state) => {
   } catch (error) {
     return {
       ...state,
-      aiResponse: "#❌ Failed to Generate Image",
+      aiResponse: "# ❌ Failed to Generate Image",
     };
   }
 };

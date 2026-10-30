@@ -1,6 +1,6 @@
 import PDFDocument from "pdfkit";
 
-const generatePDF = async (data) => {
+export const generatePDF = async (data) => {
   return new Promise((resolve, reject) => {
     const doc = new PDFDocument({
       size: "A4",
