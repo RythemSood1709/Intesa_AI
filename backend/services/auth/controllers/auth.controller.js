@@ -20,6 +20,7 @@ export const login = async (req, res) => {
         name: decoded.name,
         email: decoded.email,
         avatar: decoded.picture,
+        planExpiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
       });
     }
 
@@ -32,6 +33,10 @@ export const login = async (req, res) => {
         name: user.name,
         email: user.email,
         avatar: user.avatar,
+        plan: user.plan,
+        credits: user.credits,
+        totalCredits: user.totalCredits,
+        planExpiresAt: user.planExpiresAt,
       }),
       "EX",
       7 * 24 * 60 * 60,

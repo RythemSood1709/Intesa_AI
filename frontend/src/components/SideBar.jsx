@@ -21,6 +21,7 @@ import { createConversation } from "../features/createConversation";
 import logOut from "../features/logOut";
 import { setUserData } from "../redux/userSlice";
 import { setArtifacts, setMessages } from "../redux/messageSlice";
+import BillingDrawer from "./BillingDrawer";
 
 const SideBar = () => {
   const [collapsed, setCollapsed] = useState(
@@ -29,6 +30,8 @@ const SideBar = () => {
       window.matchMedia("(max-width: 1023px)").matches,
   );
   const [imageError, setImageError] = useState(false);
+
+  const [showBilling, setShowBilling] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -209,7 +212,10 @@ const SideBar = () => {
                   </div>
                   <div className="flex gap-1">
                     <button className="flex items-center justify-center w-6 h-6 rounded-[7px] border-none bg-transparent text-emerald-700 cursor-pointer hover:bg-white/[0.08] hover:text-orange-600 transition-all duration-150">
-                      <IndianRupee size={22} />
+                      <IndianRupee
+                        onClick={() => setShowBilling(true)}
+                        size={22}
+                      />
                     </button>
                     <button
                       onClick={() => {
@@ -231,6 +237,8 @@ const SideBar = () => {
           </div>
         </div>
       )}
+
+      <BillingDrawer open={showBilling} onClose={() => setShowBilling(false)} />
     </div>
   );
 };
