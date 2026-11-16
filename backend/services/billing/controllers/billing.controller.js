@@ -2,6 +2,7 @@ import { PLANS } from "../config/Plans.js";
 import razorpay from "../config/razorpay.js";
 import Payment from "../models/payment.model.js";
 import axios from "axios";
+import { createHmac } from "node:crypto";
 
 export const createOrder = async (req, res) => {
   try {
@@ -30,6 +31,7 @@ export const createOrder = async (req, res) => {
       status: "created",
     });
 
+
     return res.status(200).json({ order, plan: selectedPlan });
   } catch (error) {
     return res
@@ -43,8 +45,10 @@ export const verifyPayment = async (req, res) => {
     const { razorpay_order_id, razorpay_payment_id, razorpay_signature } =
       req.body;
 
-    const generateSignature = crypto
-      .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
+    const generateSignature = createHmac(
+      "sha256",
+      process.env.RAZORPAY_KEY_SECRET
+    )
       .update(`${razorpay_order_id}|${razorpay_payment_id}`)
       .digest("hex");
 

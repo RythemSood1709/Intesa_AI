@@ -1,10 +1,49 @@
 import React from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { Crown, X } from "lucide-react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { createOrder } from "../features/createOrder";
+import { verifyPayment } from "../features/verifyPayment";
+import getCurrentUser from "../features/getCurrentUser";
+import { setUserData } from "../redux/userSlice";
 
 const BillingDrawer = ({ open, onClose }) => {
   const { userData } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+
+  const handleUpgrade = async (plan) => {
+    try {
+      const data = await createOrder(plan);
+
+      const options = {
+        key: import.meta.env.VITE_RAZORPAY_KEY_ID,
+        amount: data?.order?.amount,
+        currency: data?.order?.currency,
+        name: "IntesaAI",
+        description: `Upgrade Plan to ${data?.plan?.name}`,
+        order_id: data?.order?.id,
+        handler: async (response) => {
+          try {
+            const data = await verifyPayment(response);
+            if (data?.message) {
+              const updatedUser = await getCurrentUser();
+              dispatch(setUserData(updatedUser));
+            }
+          } catch (error) {
+            console.log(error);
+          }
+        },
+        theme: {
+          color: "#0a1722",
+        },
+      };
+
+      const razorpay = new window.Razorpay(options);
+      razorpay.open();
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <AnimatePresence>
@@ -70,7 +109,10 @@ const BillingDrawer = ({ open, onClose }) => {
                 <h3 className="text-white font-semibold">Pro</h3>
                 <p className="text-sky-600 text-xl font-bold mt-2">₹199</p>
                 <p className="text-slate-400 text-sm mt-1">500 Credits</p>
-                <button className="mt-4 w-full rounded-lg bg-sky-700 hover:bg-sky-800 py-2 text-white">
+                <button
+                  onClick={() => handleUpgrade("pro")}
+                  className="mt-4 w-full rounded-lg bg-sky-700 hover:bg-sky-800 py-2 text-white"
+                >
                   Upgrade
                 </button>
               </div>
@@ -78,13 +120,14 @@ const BillingDrawer = ({ open, onClose }) => {
                 <h3 className="text-white font-semibold">Alpha</h3>
                 <p className="text-sky-600 text-xl font-bold mt-2">₹499</p>
                 <p className="text-slate-400 text-sm mt-1">1000 Credits</p>
-                <button className="mt-4 w-full rounded-lg bg-sky-700 hover:bg-sky-800 py-2 text-white">
+                <button
+                  onClick={() => handleUpgrade("alpha")}
+                  className="mt-4 w-full rounded-lg bg-sky-700 hover:bg-sky-800 py-2 text-white"
+                >
                   Upgrade
                 </button>
               </div>
             </div>
-
-
           </motion.div>
         </>
       )}
