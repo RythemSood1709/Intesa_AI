@@ -8,7 +8,10 @@ export const getMessages = async (conversationId) => {
 
     return data;
   } catch (error) {
-    console.log(error);
+    console.error(
+      "Unable to load conversation history:",
+      error.response?.data?.message || error.message,
+    );
     return null;
   }
 };

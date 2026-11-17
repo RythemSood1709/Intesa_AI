@@ -5,6 +5,7 @@ import {
 } from "@langchain/core/messages";
 import { getModel } from "../config/llmModels.js";
 import { getMemory } from "../config/memory.js";
+import { deductCredits } from "../utils/deductCredits.js";
 
 export const chatAgent = async (state) => {
   try {
@@ -58,14 +59,17 @@ export const chatAgent = async (state) => {
 
     const response = await llm.invoke(messages);
 
+    await deductCredits(state.userId, "chat");
+
     return {
       ...state,
       aiResponse: response.content,
     };
   } catch (error) {
+    console.error("Chat agent error:", error);
     return {
       ...state,
-      aiResponse: "#❌ Failed to Generate Response",
+      aiResponse: "# ❌ Failed to Generate Response",
     };
   }
 };

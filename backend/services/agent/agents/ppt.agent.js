@@ -1,3 +1,4 @@
+import { deductCredits } from "../utils/deductCredits.js";
 import { getModel } from "../config/llmModels.js";
 import { generatePPT } from "../utils/generatePPT.js";
 import { getFromS3 } from "../utils/getFromS3.js";
@@ -61,6 +62,8 @@ export const pptAgent = async (state) => {
     );
 
     const downloadUrl = await getFromS3(filename, 24 * 60 * 60);
+
+    await deductCredits(state.userId, "ppt");
 
     return {
       ...state,

@@ -1,3 +1,4 @@
+import { deductCredits } from "../utils/deductCredits.js";
 import { getModel } from "../config/llmModels.js";
 
 const parseGeneratedProject = (content) => {
@@ -116,6 +117,8 @@ export const codingAgent = async (state) => {
 
     const data = parseGeneratedProject(response.content);
 
+    await deductCredits(state.userId, "coding");
+
     return {
       ...state,
       aiResponse: "Code Generated Successfully.",
@@ -159,6 +162,8 @@ export const codingAgent = async (state) => {
     `);
 
   const data = res.content;
+
+  await deductCredits(state.userId, "coding");
 
   return {
     ...state,
