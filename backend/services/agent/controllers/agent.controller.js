@@ -6,7 +6,8 @@ import axios from "axios";
 export const agent = async (req, res) => {
   try {
     const { prompt, conversationId, agent } = req.body;
-    const userId= req.headers["x-user-id"];
+    const file = req.file;
+    const userId = req.headers["x-user-id"];
 
     await axios.post(`${process.env.CHAT_SERVICE_URL}/save-message`, {
       conversationId,
@@ -19,6 +20,7 @@ export const agent = async (req, res) => {
       conversationId,
       agent,
       userId,
+      file,
     });
 
     const response = result.aiResponse;
@@ -33,7 +35,6 @@ export const agent = async (req, res) => {
       images: result?.images || [],
       artifacts: result?.artifacts || [],
     });
-
 
     return res.status(200).json({
       answer: response,
