@@ -23,6 +23,8 @@ export const agent = async (req, res) => {
       file,
     });
 
+    console.log("Agent result:", result);
+
     const response = result.aiResponse;
 
     await addMessage(conversationId, "user", prompt);

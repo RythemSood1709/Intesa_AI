@@ -1,20 +1,22 @@
-import fs from "fs";
+import fs from "fs/promises";
 import { PDFParse } from "pdf-parse";
 import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
 import { vectorStore } from "../config/vectorDB.js";
 import { getModel } from "../config/llmModels.js";
-import { SystemMessage } from "@langchain/core/messages";
+import { HumanMessage, SystemMessage } from "@langchain/core/messages";
 import { deductCredits } from "../utils/deductCredits.js";
 
 export const pdfRagAgent = async (state) => {
-  try {
-    const buffer = fs.readFileSync(state.file.path);
+  let pdf;
 
-    const pdf = new PDFParse({
+  try {
+    const buffer = await fs.readFile(state.file.path);
+
+    pdf = new PDFParse({
       data: buffer,
     });
 
-    const result = pdf.getText();
+    const result = await pdf.getText();
 
     const text = result.text;
 
@@ -30,7 +32,7 @@ export const pdfRagAgent = async (state) => {
 
     const relevantDocs = await store.similaritySearch(state.prompt, 5);
 
-    const context = relevantDocs.map((d) => d.pageContent).join("/n/n");
+    const context = relevantDocs.map((d) => d.pageContent).join("\n\n");
 
     const llm = await getModel("pdfRag");
 
@@ -54,14 +56,20 @@ export const pdfRagAgent = async (state) => {
 
     return {
       ...state,
-      aiResponse: response.content,
+      aiResponse: response?.content,
     };
   } catch (error) {
+    console.log("Error in pdfRagAgent:", error);
     return {
       ...state,
       aiResponse: "Failed to analyze the PDF.",
     };
   } finally {
-    fs.unlinkSync(state.file.path);
+    if (pdf) {
+      await pdf.destroy();
+    }
+    if (state?.file?.path) {
+      await fs.unlink(state.file.path).catch(() => {});
+    }
   }
 };

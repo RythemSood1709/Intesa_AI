@@ -23,10 +23,13 @@ import {
   setSelectedConversation,
 } from "../redux/conversationSlice.js";
 import { updateConversation } from "../features/updateConversation.js";
+import { useRef } from "react";
 
 const ChatInput = () => {
   const [value, setValue] = useState("");
   const [selectedAgent, setSelectedAgent] = useState("Auto");
+  const [selectedFile, setSelectedFile] = useState(null);
+  const fileRef = useRef(null);
 
   const dispatch = useDispatch();
 
@@ -57,17 +60,19 @@ const ChatInput = () => {
       );
     }
 
-    const payload = {
-      prompt: value.trim(),
-      conversationId: conversation?._id,
-      agent: selectedAgent.toLowerCase(),
-    };
+    console.log(selectedFile);
+    const formData = new FormData();
+
+    formData.append("prompt", value.trim());
+    formData.append("conversationId", conversation?._id);
+    formData.append("agent", selectedAgent.toLowerCase());
+    formData.append("file", selectedFile);
 
     dispatch(addMessage({ role: "user", content: value.trim() }));
 
     setValue("");
 
-    const data = await sendMessage(payload);
+    const data = await sendMessage(formData);
     dispatch(setArtifacts(data?.artifacts || []));
     dispatch(
       addMessage({
@@ -166,10 +171,25 @@ const ChatInput = () => {
       </div>
       <div className="flex mt-2 items-center justify-between">
         <div className="flex items-center gap-1">
-          <button className="flex items-center justify-center w-8 h-8 rounded-lg text-slate-600 hover:text-slate-200 border border-transparent transition-all duration-150 bg-transparent cursor-pointer">
+          <input
+            type="file"
+            accept=".pdf, image/*"
+            hidden
+            ref={fileRef}
+            onChange={(e) => {
+              const file = e.target.files[0];
+              if (file) {
+                setSelectedFile(file);
+              }
+            }}
+          />
+          <button
+            onClick={() => fileRef.current.click()}
+            className="flex items-center justify-center w-8 h-8 rounded-lg text-slate-600 hover:text-slate-200 border border-transparent transition-all duration-150 bg-transparent cursor-pointer"
+          >
             <Paperclip size={22} />
           </button>
-          <button className="flex items-center justify-center w-8 h-8 rounded-lg text-slate-600 hover:text-slate-200 border border-transparent transition-all duration-150 bg-transparent cursor-pointer">
+          <button className="flex items-center justify-centesr w-8 h-8 rounded-lg text-slate-600 hover:text-slate-200 border border-transparent transition-all duration-150 bg-transparent cursor-pointer">
             <Mic size={22} />
           </button>
         </div>
