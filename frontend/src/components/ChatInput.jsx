@@ -9,6 +9,7 @@ import {
   Paperclip,
   Presentation,
   SendHorizontal,
+  X,
   Zap,
 } from "lucide-react";
 import React, { useState } from "react";
@@ -73,6 +74,7 @@ const ChatInput = () => {
     setValue("");
 
     const data = await sendMessage(formData);
+    setSelectedFile(null);
     dispatch(setArtifacts(data?.artifacts || []));
     dispatch(
       addMessage({
@@ -153,6 +155,43 @@ const ChatInput = () => {
           );
         })}
       </div>
+      {selectedFile && (
+        <div className="my-3">
+          <div className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/[0.04] px-3 py-2">
+            {selectedFile?.type === "application/pdf" ? (
+              <FileText size={16} className="text-red-400" />
+            ) : (
+              selectedFile?.type.startsWith("image/") && (
+                <img
+                  src={URL.createObjectURL(selectedFile)}
+                  className="h-10 w-10 rounded-xl object-cover"
+                />
+              )
+            )}
+            <div>
+              <p
+                className="md:max-w-[200px] max-w-[140px] truncate text-xs text-white"
+                title={selectedFile?.name}
+              >
+                {selectedFile?.name}
+              </p>
+              <p className="text-[10px] text-slate-500">
+                {(selectedFile?.size / 1024).toFixed(2)} KB
+              </p>
+            </div>
+            <button className="ml-1">
+              <X
+                size={14}
+                onClick={() => {
+                  setSelectedFile(null);
+                  fileRef.current.value = "";
+                }}
+                className="text-slate-500 hover:text-white"
+              />
+            </button>
+          </div>
+        </div>
+      )}
       <div className="flex items-center bg-white/[0.03] border border-white/[0.07] rounded-2xl px-4 pt-3.5 pb-3.5">
         <textarea
           rows={2}
