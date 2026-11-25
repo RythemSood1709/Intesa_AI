@@ -91,7 +91,7 @@ const Artifact = () => {
             <div className="h-14 px-4 border-b border-white/[0.06] flex items-center justify-between gap-3 shrink-0">
               <button
                 onClick={onClose ?? (() => setCollapsed(true))}
-                className="flex items-center gap-5 justify-between w-7 h-7 rounded-lg text-slate-500 hover:text-slate-200 hover:bg-white/[0.05] transition-colors duration-150 bg-transparent border-none cursor-pointer shrink-0"
+                className="flex items-center gap-5 justify-center w-7 h-7 rounded-lg text-slate-500 hover:text-slate-200 hover:bg-white/[0.05] transition-colors duration-150 bg-transparent border-none cursor-pointer shrink-0"
               >
                 {onClose ? <X size={15} /> : <PanelRightClose size={20} />}
               </button>

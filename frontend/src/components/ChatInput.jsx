@@ -15,7 +15,7 @@ import {
 import React, { useState } from "react";
 import sendMessage from "../features/sendMessage";
 import { useDispatch, useSelector } from "react-redux";
-import { addMessage, setArtifacts } from "../redux/messageSlice";
+import { addMessage, setArtifacts, setIsLoading } from "../redux/messageSlice";
 
 import { createConversation } from "../features/createConversation.js";
 import {
@@ -38,6 +38,7 @@ const ChatInput = () => {
   const { messages } = useSelector((state) => state.message);
 
   const handleSendMessage = async () => {
+    dispatch(setIsLoading(true));
     let conversation = selectedConversation;
 
     if (!conversation) {
@@ -67,13 +68,17 @@ const ChatInput = () => {
     formData.append("prompt", value.trim());
     formData.append("conversationId", conversation?._id);
     formData.append("agent", selectedAgent.toLowerCase());
-    formData.append("file", selectedFile);
+    if (selectedFile) {
+      formData.append("file", selectedFile);
+    }
 
     dispatch(addMessage({ role: "user", content: value.trim() }));
 
     setValue("");
 
     const data = await sendMessage(formData);
+    dispatch(setIsLoading(false));
+
     setSelectedFile(null);
     dispatch(setArtifacts(data?.artifacts || []));
     dispatch(
