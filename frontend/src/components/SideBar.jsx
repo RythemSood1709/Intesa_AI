@@ -160,7 +160,7 @@ const SideBar = () => {
                 <span className="text-[16px] font-semibold text-slate-100 tracking-tight flex-1">
                   IntesaAI
                   <span className="text-[8px] font-medium text-slate-400 uppercase bg-sky-500/5 border border-indigo-500/20 px-2 ml-2 py-0.5 rounded-full tracking-wide ">
-                    free
+                    {userData?.plan || "Free"}
                   </span>
                 </span>
                 <button
@@ -243,7 +243,9 @@ const SideBar = () => {
                         {userData?.name || "user"}
                       </p>
                       <p className="text-[11px] text-slate-600 mt-px">
-                        {"Free Plan"}
+                        {userData?.plan.charAt(0).toUpperCase() +
+                          userData?.plan.slice(1) +
+                          " Plan" || "free plan"}
                       </p>
                     </div>
                     <div className="flex gap-1">

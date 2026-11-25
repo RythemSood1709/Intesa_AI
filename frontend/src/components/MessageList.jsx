@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
 import MessageBubble from "./MessageBubble";
 import LoadingAnimation from "./LoadingAnimation";
@@ -8,6 +8,14 @@ const MessageList = () => {
   const { messages } = useSelector((state) => state.message);
   const { userData } = useSelector((state) => state.user);
   const { isLoading } = useSelector((state) => state.message);
+
+  const bottomRef = useRef(null);
+
+  useEffect(() => {
+    requestAnimationFrame(() => {
+      bottomRef?.current?.scrollIntoView({ behavior: "smooth", block: "end" });
+    });
+  }, [messages?.length, isLoading]);
 
   return (
     <div className="min-h-0 flex-1 overflow-y-auto px-3 sm:px-6 py-6 space-y-5 scrollbar-thin scrollbar-thumb-slate-700/60 scrollbar-thumb-rounded-full">
@@ -49,6 +57,7 @@ const MessageList = () => {
           {isLoading && <LoadingAnimation />}
         </div>
       )}
+      <div ref={bottomRef} />
     </div>
   );
 };
