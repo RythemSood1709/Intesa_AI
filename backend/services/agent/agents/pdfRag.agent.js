@@ -5,11 +5,14 @@ import { vectorStore } from "../config/vectorDB.js";
 import { getModel } from "../config/llmModels.js";
 import { HumanMessage, SystemMessage } from "@langchain/core/messages";
 import { deductCredits } from "../utils/deductCredits.js";
+import { checkAgentLimit } from "../config/agentLimit.js";
 
 export const pdfRagAgent = async (state) => {
   let pdf;
 
   try {
+    await checkAgentLimit(state?.userId, "pdf");
+    
     const buffer = await fs.readFile(state.file.path);
 
     pdf = new PDFParse({
@@ -60,6 +63,12 @@ export const pdfRagAgent = async (state) => {
     };
   } catch (error) {
     console.log("Error in pdfRagAgent:", error);
+    if (error?.status === 429) {
+      return {
+        ...state,
+        aiResponse: error?.data?.message,
+      };
+    }
     return {
       ...state,
       aiResponse: "Failed to analyze the PDF.",

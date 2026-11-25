@@ -3,9 +3,12 @@ import { getModel } from "../config/llmModels.js";
 import { generatePPT } from "../utils/generatePPT.js";
 import { getFromS3 } from "../utils/getFromS3.js";
 import { uploadToS3 } from "../utils/uploadToS3.js";
+import { checkAgentLimit } from "../config/agentLimit.js";
 
 export const pptAgent = async (state) => {
   try {
+    await checkAgentLimit(state?.userId, "ppt");
+
     const llm = await getModel("ppt");
 
     const prompt = `
@@ -77,6 +80,12 @@ _Link expires in 24 hours._`,
     };
   } catch (error) {
     console.log(error);
+    if (error?.status === 429) {
+      return {
+        ...state,
+        aiResponse: error?.data?.message,
+      };
+    }
     return {
       ...state,
       aiResponse: "# ❌ Failed to Generate Presentation",

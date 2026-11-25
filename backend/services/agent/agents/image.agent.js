@@ -3,9 +3,12 @@ import axios from "axios";
 import { uploadToS3 } from "../utils/uploadToS3.js";
 import { getFromS3 } from "../utils/getFromS3.js";
 import { deductCredits } from "../utils/deductCredits.js";
+import { checkAgentLimit } from "../config/agentLimit.js";
 
 export const imageAgent = async (state) => {
   try {
+    await checkAgentLimit(state?.userId, "image");
+
     const llm = await getModel("image");
 
     const res = await llm.invoke(
@@ -61,6 +64,12 @@ export const imageAgent = async (state) => {
 ⏳ Link expires in 24 hours.`,
     };
   } catch (error) {
+    if (error?.status === 429) {
+      return {
+        ...state,
+        aiResponse: error?.data?.message,
+      };
+    }
     return {
       ...state,
       aiResponse: "# ❌ Failed to Generate Image",

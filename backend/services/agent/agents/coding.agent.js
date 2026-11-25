@@ -1,5 +1,6 @@
 import { deductCredits } from "../utils/deductCredits.js";
 import { getModel } from "../config/llmModels.js";
+import { checkAgentLimit } from "../config/agentLimit.js";
 
 const parseGeneratedProject = (content) => {
   const text = Array.isArray(content)
@@ -33,11 +34,14 @@ const parseGeneratedProject = (content) => {
 };
 
 export const codingAgent = async (state) => {
-  const intentModel = await getModel("intent");
+  try {
+    await checkAgentLimit(state?.userId, "coding");
 
-  const llm = await getModel("coding");
+    const intentModel = await getModel("intent");
 
-  const intentRes = await intentModel.invoke(`
+    const llm = await getModel("coding");
+
+    const intentRes = await intentModel.invoke(`
       You are an AI intent classifier.
 
       Return ONLY one of these values.
@@ -54,10 +58,10 @@ export const codingAgent = async (state) => {
       ${state.prompt}
     `);
 
-  const intent = intentRes.content.trim();
+    const intent = intentRes.content.trim();
 
-  if (intent === "CODE_GENERATION") {
-    const prompt = `
+    if (intent === "CODE_GENERATION") {
+      const prompt = `
       You are IntesaAI Coding Agent.
 
       Generate the requested project.
@@ -113,27 +117,27 @@ export const codingAgent = async (state) => {
       ${state.prompt}
     `;
 
-    const response = await llm.invoke(prompt);
+      const response = await llm.invoke(prompt);
 
-    const data = parseGeneratedProject(response.content);
+      const data = parseGeneratedProject(response.content);
 
-    await deductCredits(state.userId, "coding");
+      await deductCredits(state.userId, "coding");
 
-    return {
-      ...state,
-      aiResponse: "Code Generated Successfully.",
-      artifacts: [
-        {
-          id: Date.now(),
-          type: "Project",
-          title: state.prompt,
-          files: data.files || [],
-        },
-      ],
-    };
-  }
+      return {
+        ...state,
+        aiResponse: "Code Generated Successfully.",
+        artifacts: [
+          {
+            id: Date.now(),
+            type: "Project",
+            title: state.prompt,
+            files: data.files || [],
+          },
+        ],
+      };
+    }
 
-  const res = await llm.invoke(`
+    const res = await llm.invoke(`
   You are IntesaAI Coding Agent.
 
   User's Request is:
@@ -161,13 +165,27 @@ export const codingAgent = async (state) => {
   ${state.prompt}
     `);
 
-  const data = res.content;
+    const data = res.content;
 
-  await deductCredits(state.userId, "coding");
+    await deductCredits(state.userId, "coding");
 
-  return {
-    ...state,
-    aiResponse: data,
-    artifacts: [],
-  };
+    return {
+      ...state,
+      aiResponse: data,
+      artifacts: [],
+    };
+  } catch (error) {
+    console.log(error);
+    if (error?.status === 429) {
+      return {
+        ...state,
+        aiResponse: error?.data?.message,
+        artifacts: [],
+      };
+    }
+    return {
+      ...state,
+      aiResponse: "Error generating the Code. Please try again.",
+    };
+  }
 };
