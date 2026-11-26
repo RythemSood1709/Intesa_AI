@@ -35,7 +35,8 @@ const ChatInput = () => {
   const dispatch = useDispatch();
 
   const { selectedConversation } = useSelector((state) => state.conversation);
-  const { messages } = useSelector((state) => state.message);
+  const { messages, isLoading } = useSelector((state) => state.message);
+  const isSendDisabled = !value.trim() || isLoading;
 
   const handleSendMessage = async () => {
     dispatch(setIsLoading(true));
@@ -206,9 +207,9 @@ const ChatInput = () => {
           className="w-full bg-transparent outline-none resize-none text-[14px] text-slate-200 placeholder:text-slate-600 leading-relaxed [scrollbar-width:none] [&::-webkit-scrollbar]:hidden disabled:opacity-50"
         />
         <button
-          disabled={!value}
+          disabled={isSendDisabled}
           onClick={handleSendMessage}
-          className={`flex items-center justify-center w-8 h-8 rounded-lg border-none text-slate-500 ${!value.trim() ? "hover:text-slate-500 cursor-not-allowed" : "hover:text-slate-100 cursor-pointer"}  transition-all duration-150`}
+          className={`flex items-center justify-center w-8 h-8 rounded-lg border-none text-slate-500 ${isSendDisabled ? "hover:text-slate-500 cursor-not-allowed" : "hover:text-slate-100 cursor-pointer"}  transition-all duration-150`}
         >
           <SendHorizontal size={25} />
         </button>
